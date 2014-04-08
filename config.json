@@ -1,0 +1,11 @@
+{
+  "astokengen" : "/opt/aspera/bin/astokengen",
+  "host" : "0.0.0.0",
+  "port" : 9999,
+  "workers" : 1,
+  "ssl" : {
+    "key" : "",
+    "cert" : "",
+    "ca" : ""
+  }
+}

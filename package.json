@@ -1,0 +1,11 @@
+{
+     "name": "aspera-tokengen",
+     "description": "Aspera tokengen",
+     "version": "0.0.1",
+     "dependencies": {
+        "express": "",
+        "pluribus": "",
+        "nconf": ""
+     }
+}
+
