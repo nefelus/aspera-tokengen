@@ -4,6 +4,13 @@
      "version": "0.0.1",
      "dependencies": {
         "express": "",
+        "routification": "",
+        "morgan": "",
+        "static-favicon" : "",
+        "body-parser" : "",
+        "method-override" : "",
+        "response-time" : "",
+        "compression" : "",
         "pluribus": "",
         "nconf": ""
      }

@@ -9,6 +9,7 @@ var https = require('https');
 var http = require('http');
 var util = require('util');
 var express = require('express');
+var routify = require('routification');
 var pluribus = require('pluribus');
 var path = require('path');
 var nconf = require('nconf');
@@ -94,7 +95,7 @@ var allowCrossDomain = function(req, res, next) {
     }
 };
 
-var app = express();
+var app = routify(express());
 if (sslOptions !== false) {
   https.createServer(sslOptions, app).listen(nconf.get('port'));
   protocol = "https";
@@ -113,42 +114,21 @@ function error(status, msg) {
 }
 
 app.use(allowCrossDomain);
-app.use(express.favicon());
-app.use(express.logger());
-app.use(express.bodyParser()); 
+
+app.use(require('morgan')());
+app.use(require('static-favicon')());
+app.use(require('body-parser')());
 // is equivalent to:
 //app.use(express.json());
 //app.use(express.urlencoded());
 ////app.use(express.multipart());
 
-app.use(express.methodOverride());
-app.use(express.responseTime());
-app.use(express.compress());
+app.use(require('method-override')());
+app.use(require('response-time')());
+app.use(require('compression')());
 
 // if we wanted to supply more than JSON, we could use something similar
 // to the content-negotiation example.
-
-// position our routes above the error handling middleware,
-// and below our API middleware, since we want the API validation
-// to take place BEFORE our routes
-app.use(app.router);
-
-// middleware with an arity of 4 are considered error handling middleware. When you next(err)
-// it will be passed through the defined middleware in order, but ONLY those with an arity of 4,
-// ignoring regular middleware.
-app.use(function(err, req, res, next){
-  // whatever you want here, feel free to populate
-  // properties on `err` to treat it differently in here.
-  res.type('application/json');
-  res.send(err.status || 500, { error: err.message });
-});
-
-// our custom JSON 404 middleware. Since it's placed last, it will be the last middleware called,
-// if all others invoke next() and do not respond.
-app.use(function(req, res){
-  res.type('application/json');
-  res.send(404, { error: "Unhandled condition" });
-});
 
 app.all('/sign', function (req, res) {
   var user = req.param('username');
@@ -180,6 +160,24 @@ app.all('/sign', function (req, res) {
         res.jsonp(result);
       });
 });
+
+// middleware with an arity of 4 are considered error handling middleware. When you next(err)
+// it will be passed through the defined middleware in order, but ONLY those with an arity of 4,
+// ignoring regular middleware.
+app.use(function(err, req, res, next){
+  // whatever you want here, feel free to populate
+  // properties on `err` to treat it differently in here.
+  res.type('application/json');
+  res.send(err.status || 500, { error: err.message });
+});
+
+// our custom JSON 404 middleware. Since it's placed last, it will be the last middleware called,
+// if all others invoke next() and do not respond.
+app.use(function(req, res){
+  res.type('application/json');
+  res.send(404, { error: "Unhandled condition" });
+});
+
 
 } //main routine
 
