@@ -7,7 +7,6 @@
         "static-favicon": "~1.0.0",
         "morgan": "~1.0.0",
         "body-parser": "~1.0.0",
-        "routification": "~0.0.1",
         "method-override" : "~1.0.0",
         "response-time" : "~1.0.0",
         "compression" : "~1.0.1",

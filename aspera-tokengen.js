@@ -9,7 +9,6 @@ var https = require('https');
 var http = require('http');
 var util = require('util');
 var express = require('express');
-var routify = require('routification');
 var pluribus = require('pluribus');
 var path = require('path');
 var nconf = require('nconf');
@@ -95,7 +94,7 @@ var allowCrossDomain = function(req, res, next) {
     }
 };
 
-var app = routify(express());
+var app = express();
 if (sslOptions !== false) {
   https.createServer(sslOptions, app).listen(nconf.get('port'));
   protocol = "https";
